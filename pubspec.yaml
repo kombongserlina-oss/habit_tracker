@@ -1,0 +1,34 @@
+name: project_habits
+description: Habits Diary
+publish_to: "none"
+version: 1.0.0+2
+
+environment:
+  sdk: ">=2.12.0 <4.0.0" # Diubah agar support SDK 3.x kamu
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  sqflite: ^2.3.0 # Update tipis agar lebih stabil
+  get_it: ^7.6.0 # Versi 6 sudah agak lama
+  provider: ^6.1.1 # Update ke versi 6
+  flutter_slidable: ^3.0.1 # Versi 0.6 sudah sangat usang
+  emoji_picker_flutter: ^1.6.0 # Update versi
+  shared_preferences: ^2.2.0 # Update versi
+  url_launcher: ^6.2.0 # Update versi
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.14.4 # Tambahkan tanda ^
+
+flutter:
+  uses-material-design: true
+
+  fonts:
+    - family: Kodchasan
+      fonts:
+        - asset: assets/fonts/Kodchasan-Regular.ttf
+        - asset: assets/fonts/Kodchasan-Bold.ttf
+          weight: 700
