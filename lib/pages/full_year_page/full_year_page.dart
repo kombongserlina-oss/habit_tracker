@@ -15,7 +15,8 @@ class FullYearPage extends StatelessWidget {
         appBar: AppBar(
           title: Text(
             now.year.toString(),
-            style: Theme.of(context).textTheme.headline1
+            // PERBAIKAN: headline1 -> headlineLarge
+            style: Theme.of(context).textTheme.headlineLarge,
           ),
         ),
         body: Padding(
@@ -77,7 +78,7 @@ class FullYearPage extends StatelessWidget {
                   ],
                 ),
               ),
-            ]
+            ],
           ),
         ),
       ),
@@ -99,46 +100,47 @@ class MiniCalendar extends StatelessWidget {
 
     return Expanded(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            MONTH_NAMES[month - 1].substring(0, 3),
-            style: Theme.of(context).textTheme.subtitle2,
-          ),
-          StreamBuilder<bool>(
-            stream: controller.loading.stream,
-            initialData: controller.loading.value,
-            builder: (context, snapshot) {
-              return GridView.count(
-                crossAxisCount: 7,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(10),
-                children: List.generate(days, (index) {
-                  if(index < whiteSpaces) {
-                    return SizedBox.shrink();
-                  }
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              MONTH_NAMES[month - 1].substring(0, 3),
+              // PERBAIKAN: subtitle2 -> titleSmall
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            StreamBuilder<bool>(
+                stream: controller.loading.stream,
+                initialData: controller.loading.value,
+                builder: (context, snapshot) {
+                  return GridView.count(
+                    crossAxisCount: 7,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(10),
+                    children: List.generate(days, (index) {
+                      if(index < whiteSpaces) {
+                        return SizedBox.shrink();
+                      }
 
-                  final day = (snapshot.data! == false) 
-                  ? controller.getDay(DateTime(year, month, index - whiteSpaces + 1))
-                  : null;
+                      final day = (snapshot.data! == false)
+                          ? controller.getDay(DateTime(year, month, index - whiteSpaces + 1))
+                          : null;
 
-                  return AnimatedContainer(
-                    duration: const Duration(milliseconds: 500),
-                    decoration: BoxDecoration(
-                      color: (day != null)
-                      ? Color.lerp(Theme.of(context).shadowColor, Theme.of(context).primaryColor, controller.countHabitsDone(day) / day.habits.length)
-                      : Theme.of(context).shadowColor,
-                      borderRadius: BorderRadius.circular(5)
-                    )
+                      return AnimatedContainer(
+                          duration: const Duration(milliseconds: 500),
+                          decoration: BoxDecoration(
+                              color: (day != null)
+                                  ? Color.lerp(Theme.of(context).shadowColor, Theme.of(context).primaryColor, controller.countHabitsDone(day) / day.habits.length)
+                                  : Theme.of(context).shadowColor,
+                              borderRadius: BorderRadius.circular(5)
+                          )
+                      );
+                    }),
                   );
-                }),
-              );
-            }
-          ),
-        ]
+                }
+            ),
+          ]
       ),
     );
   }
