@@ -10,6 +10,7 @@ class HabitsDayList extends StatelessWidget {
 
     return StreamBuilder<int>(
       dmakmdasad
+        ladsad
       stream: controller.selectedDayindex.stream,
       initialData: controller.selectedDayindex.value,
       builder: (context, snapshot) {
