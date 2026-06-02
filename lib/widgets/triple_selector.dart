@@ -1,100 +1,68 @@
 import 'package:flutter/material.dart';
 
-class TripleSelector extends StatefulWidget {
+class TripleSelector extends StatelessWidget {
   final List<String> options;
-  final Function(int value) onChanged;
-  final int? initialValue;
-  final MainAxisAlignment align;
+  final int selectedIndex;
+  final ValueChanged<int> onSelect;
 
-  TripleSelector({
+  const TripleSelector({
+    Key? key,
     required this.options,
-    required this.onChanged,
-    this.initialValue,
-    this.align = MainAxisAlignment.center
-  }) : assert(options.length == 3);
-
-  @override
-  _TripleSelectorState createState() => _TripleSelectorState();
-}
-
-class _TripleSelectorState extends State<TripleSelector> {
-  int? selected;
-
-  @override
-  void initState() {
-    selected = widget.initialValue;
-    super.initState();
-  }
-
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: widget.align,
-      children: [
-        Box(
-          border: Border.all(color: Theme.of(context).accentColor),
-          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
-          selected: selected == 0,
-          text: widget.options[0],
-          onTap: () => _ontap(0)
-        ),
-        Box(
-          border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).accentColor)),
-          selected: selected == 1,
-          text: widget.options[1],
-          onTap: () => _ontap(1)
-        ),
-        Box(
-          border: Border.all(color: Theme.of(context).accentColor),
-          borderRadius: BorderRadius.only(topRight: Radius.circular(10), bottomRight: Radius.circular(10)),
-          selected: selected == 2,
-          text: widget.options[2],
-          onTap: () => _ontap(2),
-        ),
-      ],
-    );
-  }
-
-  _ontap(int value) {
-    setState(() {
-      selected = value;
-    });
-    widget.onChanged(value);
-  }
-}
-
-class Box extends StatelessWidget {
-  final bool selected;
-  final Function() onTap;
-  final String text;
-  final Border border;
-  final BorderRadius? borderRadius;
-
-  Box({
-    required this.selected,
-    required this.onTap,
-    required this.text,
-    required this.border,
-    this.borderRadius
-  });
+    required this.selectedIndex,
+    required this.onSelect,
+  })  : assert(options.length == 3, 'Options must contain exactly 3 items'),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          border: border,
-          borderRadius: borderRadius,
-          color: selected ? Theme.of(context).accentColor : Colors.transparent
+    // Aturan 2 & 4: Perbaikan titik dua ganda dan migrasi backgroundColor -> colorScheme.surface
+    final containerBackground = Theme.of(context).colorScheme.surface;
+
+    // Aturan 1: Migrasi accentColor -> colorScheme.secondary
+    final activeIndicatorColor = Theme.of(context).colorScheme.secondary;
+
+    return Container(
+      padding: const EdgeInsets.all(4.0),
+      decoration: BoxDecoration(
+        color: containerBackground,
+        borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(
+          color: Colors.grey.shade300,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.bodyText2!.copyWith(
-            fontSize: Theme.of(context).textTheme.bodyText2!.fontSize! - 2,
-            color: selected ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark 
-          ),
-        ),
+      ),
+      child: Row(
+        children: List.generate(3, (index) {
+          final isSelected = index == selectedIndex;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => onSelect(index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.symmetric(vertical: 12.0),
+                decoration: BoxDecoration(
+                  color: isSelected ? activeIndicatorColor : Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: Center(
+                  child: Text(
+                    options[index],
+                    // Aturan 3: Migrasi TextTheme lama
+                    // Jika aktif pakai titleSmall (subtitle2), jika tidak pakai bodyMedium (bodyText2)
+                    style: isSelected
+                        ? Theme.of(context).textTheme.titleSmall?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    )
+                        : Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
       ),
     );
   }

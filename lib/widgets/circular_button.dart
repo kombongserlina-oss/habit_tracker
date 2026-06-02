@@ -1,44 +1,65 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class CircularButton extends StatefulWidget {
-  final Function() onPressed;
-  final Icon icon;
-  final EdgeInsetsGeometry? padding;
-  final bool noBackground;
+class CircularButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+  final String? label;
 
-  CircularButton({
-    required this.onPressed,
+  const CircularButton({
+    Key? key,
     required this.icon,
-    this.padding,
-    this.noBackground = false
-  });
-
-  @override
-  _CircularButtonState createState() => _CircularButtonState();
-}
-
-class _CircularButtonState extends State<CircularButton> {
-  bool isTapDown = false;
+    required this.onPressed,
+    this.label,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPressed,
-      onTapDown: (details) => setState(() { isTapDown = true; }),
-      onTapUp: (details) => setState(() { isTapDown = false; }),
-      onTapCancel: () => setState(() { isTapDown = false; }),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        padding: widget.padding,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: (isTapDown)
-            ? (widget.noBackground) ? Colors.transparent : HSVColor.fromColor(Theme.of(context).accentColor).withValue(0.6).toColor()
-            : (widget.noBackground) ? Colors.transparent : Theme.of(context).accentColor,
+    // Aturan 2 & 4: Perbaikan titik dua ganda dan migrasi backgroundColor -> colorScheme.surface
+    final backgroundColor = Theme.of(context).colorScheme.surface;
+
+    // Aturan 1: Migrasi accentColor -> colorScheme.secondary
+    final iconColor = Theme.of(context).colorScheme.secondary;
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onPressed,
+            customBorder: const CircleBorder(),
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                color: backgroundColor,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 28.0,
+              ),
+            ),
+          ),
         ),
-        child: widget.icon
-      ),
+        if (label != null) ...[
+          const SizedBox(height: 8.0),
+          Text(
+            label!,
+            // Aturan 3: Migrasi TextTheme lama (bodyText2 -> bodyMedium)
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ],
     );
   }
 }

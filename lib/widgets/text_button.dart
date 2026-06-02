@@ -1,42 +1,43 @@
 import 'package:flutter/material.dart';
 
-class MyTextButton extends StatefulWidget {
-  final Function() onPressed;
+class CustomTextButton extends StatelessWidget {
   final String text;
-  final TextAlign align;
+  final VoidCallback onPressed;
+  final bool isSecondary;
 
-  MyTextButton({
-    required this.onPressed,
+  const CustomTextButton({
+    Key? key,
     required this.text,
-    this.align = TextAlign.start
-  });
-
-  @override
-  _MyTextButtonState createState() => _MyTextButtonState();
-}
-
-class _MyTextButtonState extends State<MyTextButton> {
-  bool isTapDown = false;
+    required this.onPressed,
+    this.isSecondary = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onPressed,
-      onTapDown: (details) => setState(() { isTapDown = true; }),
-      onTapUp: (details) => setState(() { isTapDown = false; }),
-      onTapCancel: () => setState(() { isTapDown = false; }),
-      child: AnimatedDefaultTextStyle(
-        duration: const Duration(milliseconds: 100),
-        child: Text(
-          widget.text,
-          textAlign: widget.align,
-        ), 
-        style: Theme.of(context).textTheme.button!.copyWith(
-          color: (isTapDown) 
-          ? HSVColor.fromColor(Theme.of(context).accentColor).withValue(0.6).toColor() 
-          : Theme.of(context).accentColor
-        )
-      )
+    // Aturan 1 & 4: Perbaikan titik dua ganda dan migrasi accentColor -> colorScheme.secondary
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+
+    // Aturan 2: Migrasi backgroundColor -> colorScheme.surface
+    final surfaceColor = Theme.of(context).colorScheme.surface;
+
+    return TextButton(
+      onPressed: onPressed,
+      style: TextButton.styleFrom(
+        // Menentukan warna teks tombol (foregroundColor) berdasarkan parameter
+        foregroundColor: isSecondary ? secondaryColor : Colors.blue,
+        backgroundColor: surfaceColor, // Menggunakan warna permukaan baru
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+      ),
+      child: Text(
+        text,
+        // Aturan 3: Migrasi TextTheme lama (button -> labelLarge)
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }

@@ -1,47 +1,75 @@
 import 'package:flutter/material.dart';
 
-class TextInput extends StatelessWidget {
-  final Function(String newValue) onChanged;
+class CustomTextInput extends StatelessWidget {
+  final TextEditingController controller;
   final String label;
-  final String? hint;
-  final TextEditingController? controller;
-  final Function(String newValue)? onSubmitted;
-  final bool autoFocus;
+  final String hintText;
+  final bool isPassword;
+  final TextInputType keyboardType;
 
-  TextInput({
-    required this.onChanged,
+  const CustomTextInput({
+    Key? key,
+    required this.controller,
     required this.label,
-    this.hint,
-    this.controller,
-    this.onSubmitted,
-    this.autoFocus = false
-  });
+    required this.hintText,
+    this.isPassword = false,
+    this.keyboardType = TextInputType.text,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      autofocus: autoFocus,
-      style: Theme.of(context).textTheme.bodyText2,
-      cursorColor: Theme.of(context).accentColor,
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: Theme.of(context).textTheme.bodyText2!.copyWith(
-          fontWeight: FontWeight.bold
+    // Aturan 1 & 4: Migrasi accentColor -> colorScheme.secondary & pastikan titik tunggal
+    final focusColor = Theme.of(context).colorScheme.secondary;
+
+    // Aturan 2: Migrasi backgroundColor -> colorScheme.surface
+    final fillColor = Theme.of(context).colorScheme.surface;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          // Aturan 3: Migrasi TextTheme lama (subtitle1 -> titleMedium)
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+          ),
         ),
-        alignLabelWithHint: true,
-        hintText: hint,
-        hintStyle: Theme.of(context).textTheme.bodyText2,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10)
+        const SizedBox(height: 8.0),
+        TextField(
+          controller: controller,
+          obscureText: isPassword,
+          keyboardType: keyboardType,
+          // Aturan 3: Migrasi gaya teks input (bodyText2 -> bodyMedium)
+          style: Theme.of(context).textTheme.bodyMedium,
+          decoration: InputDecoration(
+            hintText: hintText,
+            // Aturan 3: Migrasi gaya teks hint (bodyText2 -> bodyMedium)
+            hintStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey.shade400,
+            ),
+            filled: true,
+            fillColor: fillColor,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+              vertical: 14.0,
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: Colors.grey.shade300,
+                width: 1.0,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8.0),
+              borderSide: BorderSide(
+                color: focusColor,
+                width: 2.0,
+              ),
+            ),
+          ),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).accentColor),
-          borderRadius: BorderRadius.circular(10)
-        ),
-      ),
+      ],
     );
   }
 }
