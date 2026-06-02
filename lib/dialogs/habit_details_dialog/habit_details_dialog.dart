@@ -14,91 +14,94 @@ class HabitDetailsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      create: (ctx) => HabitDetailsDialogController(habitId),
-      builder: (ctx, child) => Consumer<HabitDetailsDialogController>(
-        builder: (ctx, controller, child) {
-          return Dialog(
-            insetPadding: const EdgeInsets.all(0),
-            backgroundColor: Theme.of(context).backgroundColor,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+        create: (ctx) => HabitDetailsDialogController(habitId),
+        builder: (ctx, child) => Consumer<HabitDetailsDialogController>(
+            builder: (ctx, controller, child) {
+              return Dialog(
+                insetPadding: const EdgeInsets.all(0),
+                // PERBAIKAN: .backgroundColor -> .colorScheme.surface
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                child: Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircularButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: Icon(
-                          Icons.close_rounded,
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                        noBackground: true,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CircularButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            icon: Icon(
+                              Icons.close_rounded,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            noBackground: true,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          EmojiInput(
+                            initialEmoji: controller.habit.emoji,
+                            onChange: controller.newEmoji,
+                          ),
+                          VerticalDivider(color: Colors.transparent),
+                          EditableText(
+                            initialText: controller.habit.text,
+                            onChange: (newValue) => controller.newName(newValue),
+                          ),
+                        ],
+                      ),
+                      const Divider(color: Colors.transparent),
+                      Text("Period", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Divider(color: Colors.transparent, height: 10),
+                      PeriodRow(),
+                      const Divider(color: Colors.transparent),
+                      RichText(
+                          text: TextSpan(
+                              text: "Start period: ",
+                              // PERBAIKAN: bodyText2 -> bodyMedium
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
+                              children: [
+                                TextSpan(
+                                    text: controller.getStartPeriodString(),
+                                    // PERBAIKAN: subtitle2 -> titleSmall
+                                    style: Theme.of(context).textTheme.titleSmall
+                                )
+                              ]
+                          )
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      EmojiInput(
-                        initialEmoji: controller.habit.emoji,
-                        onChange: controller.newEmoji,
-                      ),
-                      VerticalDivider(color: Colors.transparent),
-                      EditableText(
-                        initialText: controller.habit.text,
-                        onChange: (newValue) => controller.newName(newValue),
-                      ),
-                    ],
-                  ),
-                  const Divider(color: Colors.transparent),
-                  Text("Period", style: TextStyle(fontWeight: FontWeight.bold)),
-                  const Divider(color: Colors.transparent, height: 10),
-                  PeriodRow(),
-                  const Divider(color: Colors.transparent),
-                  RichText(
-                    text: TextSpan(
-                      text: "Start period: ",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
-                      children: [
-                        TextSpan(
-                          text: controller.getStartPeriodString(),
-                          style: Theme.of(context).textTheme.subtitle2
-                        )
-                      ]
-                    )
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-      )
+                ),
+              );
+            }
+        )
     );
   }
 
   static void show(BuildContext context, int habitId) {
     showGeneralDialog(
-      context: context,
-      barrierLabel: "habit-details-dialog",
-      barrierDismissible: true,
-      transitionDuration: const Duration(milliseconds: 300),
-      transitionBuilder: (ctx, anim1, anim2, child) {
-        final curvedAnimation = CurvedAnimation(
-          parent: anim1,
-          curve: Curves.ease
-        );
+        context: context,
+        barrierLabel: "habit-details-dialog",
+        barrierDismissible: true,
+        transitionDuration: const Duration(milliseconds: 300),
+        transitionBuilder: (ctx, anim1, anim2, child) {
+          final curvedAnimation = CurvedAnimation(
+              parent: anim1,
+              curve: Curves.ease
+          );
 
-        return ScaleTransition(
-          scale: curvedAnimation,
-          child: child,
-        );
-      },
-      pageBuilder: (cts, anim1, anim2) {
-        return HabitDetailsDialog(habitId);
-      }
+          return ScaleTransition(
+            scale: curvedAnimation,
+            child: child,
+          );
+        },
+        pageBuilder: (cts, anim1, anim2) {
+          return HabitDetailsDialog(habitId);
+        }
     );
   }
 }
@@ -150,8 +153,8 @@ class _EditableTextState extends State<EditableText> {
     } else {
       return Expanded(
         child: GestureDetector(
-          onTap: () => setState(() {editing = true;}),
-          child: Text(text)
+            onTap: () => setState(() {editing = true;}),
+            child: Text(text)
         ),
       );
     }

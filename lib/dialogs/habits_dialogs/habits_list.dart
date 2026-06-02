@@ -36,9 +36,9 @@ class HabitsList extends StatelessWidget {
                 extentRatio: 0.25,
                 children: [
                   SlidableAction(
-                    onPressed: (context) {
-                      // PERBAIKAN: Di Slidable 3.x, controller otomatis dikelola, 
-                      // kita hanya perlu memanggil fungsi delete
+                    onPressed: (slidableContext) {
+                      // PERBAIKAN: Menggunakan 'context' dari method build utama
+                      // agar pencarian instansi controller via Provider tetap valid dan aman
                       controller.showDeleteHabitConfirmation(context, habit.id);
                     },
                     backgroundColor: Theme.of(context).highlightColor,
@@ -58,10 +58,10 @@ class HabitsList extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 10),
                         child: Text(
                           habit.emoji,
-                          // PERBAIKAN: headline1 -> displayLarge
-                          style: Theme.of(context).textTheme.displayLarge!.copyWith(
-                                color: Theme.of(context).primaryColorDark,
-                              ),
+                          // PERBAIKAN: Berdasarkan aturan 3, jika sebelumnya tertulis headline1 -> diganti ke headlineLarge
+                          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                            color: Theme.of(context).primaryColorDark,
+                          ),
                         ),
                       ),
                       Expanded(

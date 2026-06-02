@@ -59,14 +59,16 @@ class PeriodDayBox extends StatelessWidget {
       height: 40,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: (colored) ? Theme.of(context).accentColor : Theme.of(context).shadowColor,
+        // PERBAIKAN: accentColor -> colorScheme.secondary
+        color: (colored) ? Theme.of(context).colorScheme.secondary : Theme.of(context).shadowColor,
       ),
       alignment: Alignment.center,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodyText2!.copyWith(
-          fontSize: 18,
-          color: (colored) ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark
+        // PERBAIKAN: bodyText2 -> bodyMedium
+        style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+            fontSize: 18,
+            color: (colored) ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark
         ),
         textAlign: TextAlign.center,
       ),
