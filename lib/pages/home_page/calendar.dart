@@ -12,69 +12,70 @@ class Calendar extends StatelessWidget {
     final cellDimension = (MediaQuery.of(context).size.width - (cellSpacing * 6) - (padding * 2)) / 7;
 
     return StreamBuilder<DateTime>(
-      stream: controller.selectedMonth.stream,
-      initialData: controller.selectedMonth.value,
-      builder: (context, snapshot) {
-        final initialWhites = snapshot.data!.weekday - 1;
-        final daysNumber = DateUtils.getDaysInMonth(snapshot.data!.year, snapshot.data!.month);
-  
-        return Stack(
-          children: [
-            GestureDetector(
-              onHorizontalDragEnd: controller.onSwipeCalendar,
-              child: GridView.count(
-                crossAxisCount: 7,
-                mainAxisSpacing: cellSpacing,
-                crossAxisSpacing: cellSpacing,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(padding),
-                children: List.generate(daysNumber + initialWhites, (index) {
-                  if(index < initialWhites) {
-                    return SizedBox.shrink();
-                  }
+        stream: controller.selectedMonth.stream,
+        initialData: controller.selectedMonth.value,
+        builder: (context, snapshot) {
+          final initialWhites = snapshot.data!.weekday - 1;
+          final daysNumber = DateUtils.getDaysInMonth(snapshot.data!.year, snapshot.data!.month);
 
-                  return GestureDetector(
-                    onTap: () => controller.selectNewDay(index - initialWhites),
-                    child: AnimatedContainer(
-                      duration: Duration(milliseconds: 300),
-                      decoration: BoxDecoration(
-                        color: Color.lerp(
-                          Theme.of(context).shadowColor,
-                          Theme.of(context).primaryColor,
-                          controller.countHabitsDone(index - initialWhites) / controller.countAllHabits(index - initialWhites)
-                        ),
-                        borderRadius: BorderRadius.circular(10)
-                      )
-                    ),
-                  );
-                }),
+          return Stack(
+            children: [
+              GestureDetector(
+                onHorizontalDragEnd: controller.onSwipeCalendar,
+                child: GridView.count(
+                  crossAxisCount: 7,
+                  mainAxisSpacing: cellSpacing,
+                  crossAxisSpacing: cellSpacing,
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(padding),
+                  children: List.generate(daysNumber + initialWhites, (index) {
+                    if(index < initialWhites) {
+                      return SizedBox.shrink();
+                    }
+
+                    return GestureDetector(
+                      onTap: () => controller.selectNewDay(index - initialWhites),
+                      child: AnimatedContainer(
+                          duration: Duration(milliseconds: 300),
+                          decoration: BoxDecoration(
+                              color: Color.lerp(
+                                  Theme.of(context).shadowColor,
+                                  Theme.of(context).primaryColor,
+                                  controller.countHabitsDone(index - initialWhites) / controller.countAllHabits(index - initialWhites)
+                              ),
+                              borderRadius: BorderRadius.circular(10)
+                          )
+                      ),
+                    );
+                  }),
+                ),
               ),
-            ),
-            StreamBuilder<int>(
-              stream: controller.selectedDayindex.stream,
-              initialData: controller.selectedDayindex.value,
-              builder: (context, snapshot) {
-                final selectedDayIndex = snapshot.data!;
+              StreamBuilder<int>(
+                  stream: controller.selectedDayindex.stream,
+                  initialData: controller.selectedDayindex.value,
+                  builder: (context, snapshot) {
+                    final selectedDayIndex = snapshot.data!;
 
-                return AnimatedPositioned(
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOutQuad,
-                  left: padding + (cellDimension + cellSpacing) * ((selectedDayIndex + initialWhites) % 7),
-                  top: padding + (cellDimension + cellSpacing) * ((selectedDayIndex + initialWhites) / 7).floor(),
-                  child: SizedBox(
-                    width: cellDimension,
-                    height: cellDimension,
-                    child: CustomPaint(
-                      painter: SelectionPainer(color: Theme.of(context).accentColor),
-                    )
-                  ),
-                );
-              }
-            )
-          ],
-        );
-      }
+                    return AnimatedPositioned(
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeOutQuad,
+                      left: padding + (cellDimension + cellSpacing) * ((selectedDayIndex + initialWhites) % 7),
+                      top: padding + (cellDimension + cellSpacing) * ((selectedDayIndex + initialWhites) / 7).floor(),
+                      child: SizedBox(
+                          width: cellDimension,
+                          height: cellDimension,
+                          child: CustomPaint(
+                            // ✅ DIPERBAIKI: accentColor -> colorScheme.secondary
+                            painter: SelectionPainer(color: Theme.of(context).colorScheme.secondary),
+                          )
+                      ),
+                    );
+                  }
+              )
+            ],
+          );
+        }
     );
   }
 }
@@ -122,10 +123,10 @@ class SelectionPainer extends CustomPainter {
     path.lineTo(size.width + OFFSET, size.height - CURVE);
     path.quadraticBezierTo(size.width + OFFSET, size.height + OFFSET, size.width - CURVE, size.height + OFFSET);
     path.lineTo(size.width - LENGTH, size.height + OFFSET);
-  
+
     canvas.drawPath(path, basePaint);
   }
-  
+
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

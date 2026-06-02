@@ -9,44 +9,43 @@ class HabitsDayList extends StatelessWidget {
     final controller = Provider.of<HomePageController>(context);
 
     return StreamBuilder<int>(
-      dmakmdasad
-        ladsad
-      stream: controller.selectedDayindex.stream,
-      initialData: controller.selectedDayindex.value,
-      builder: (context, snapshot) {
-        final dayIndex = snapshot.data!;
+        stream: controller.selectedDayindex.stream,
+        initialData: controller.selectedDayindex.value,
+        builder: (context, snapshot) {
+          final dayIndex = snapshot.data!;
 
-        return ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          itemCount: controller.days[dayIndex].habits.length,
-          itemBuilder: (ctx, i) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 10),
-                  child: Text(
-                    controller.habits[controller.days[dayIndex].habits.keys.elementAt(i)]?.emoji ?? "‽",
-                    style: Theme.of(context).textTheme.headline1!.copyWith(
-                      color: Theme.of(context).primaryColorDark
-                    )
+          return ListView.separated(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            itemCount: controller.days[dayIndex].habits.length,
+            itemBuilder: (ctx, i) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Text(
+                        controller.habits[controller.days[dayIndex].habits.keys.elementAt(i)]?.emoji ?? "‽",
+                        style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          // ✅ DIPERBAIKI: headline1 -> headlineLarge
+                            color: Theme.of(context).primaryColorDark
+                        )
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Text(
-                    controller.habits[controller.days[dayIndex].habits.keys.elementAt(i)]?.text ?? ""
+                  Expanded(
+                    child: Text(
+                        controller.habits[controller.days[dayIndex].habits.keys.elementAt(i)]?.text ?? ""
+                    ),
                   ),
-                ),
-                MyCheckbox(
-                  initValue: controller.days[dayIndex].habits[controller.days[dayIndex].habits.keys.elementAt(i)] ?? false,
-                  onChange: (newValue) => controller.updateHabitCheck(dayIndex, controller.days[dayIndex].habits.keys.elementAt(i), newValue)
-                )
-              ],
-            );
-          },
-          separatorBuilder: (ctx, i) => Divider(indent: 30, endIndent: 30),
-        );
-      }
+                  MyCheckbox(
+                      initValue: controller.days[dayIndex].habits[controller.days[dayIndex].habits.keys.elementAt(i)] ?? false,
+                      onChange: (newValue) => controller.updateHabitCheck(dayIndex, controller.days[dayIndex].habits.keys.elementAt(i), newValue)
+                  )
+                ],
+              );
+            },
+            separatorBuilder: (ctx, i) => Divider(indent: 30, endIndent: 30),
+          );
+        }
     );
   }
 }

@@ -10,47 +10,48 @@ class MonthRow extends StatelessWidget {
     final now = DateTime.now();
 
     return StreamBuilder<DateTime>(
-      stream: controller.selectedMonth.stream,
-      initialData: controller.selectedMonth.value,
-      builder: (context, snapshot) {
-        final selectedMonth = snapshot.data!;
+        stream: controller.selectedMonth.stream,
+        initialData: controller.selectedMonth.value,
+        builder: (context, snapshot) {
+          final selectedMonth = snapshot.data!;
 
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.12,
-              child: GestureDetector(
-                onTap: () => controller.previousMonth(),
-                child: Icon(
-                  Icons.chevron_left_rounded,
-                  color: Theme.of(context).primaryColorDark,
-                )
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.12,
+                child: GestureDetector(
+                    onTap: () => controller.previousMonth(),
+                    child: Icon(
+                      Icons.chevron_left_rounded,
+                      color: Theme.of(context).primaryColorDark,
+                    )
+                ),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.35,
-              child: Text(
-                MONTH_NAMES[selectedMonth.month - 1],
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline2
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.35,
+                child: Text(
+                    MONTH_NAMES[selectedMonth.month - 1],
+                    textAlign: TextAlign.center,
+                    // ✅ DIPERBAIKI: headline2 -> headlineMedium
+                    style: Theme.of(context).textTheme.headlineMedium
+                ),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.12,
-              child: (selectedMonth.year == now.year && selectedMonth.month == now.month) 
-              ? SizedBox.shrink()
-              : GestureDetector(
-                onTap: () => controller.nextMonth(),
-                child: Icon(
-                  Icons.chevron_right_rounded,
-                  color: Theme.of(context).primaryColorDark
-                )
-              ) ,
-            )
-          ],
-        );
-      }
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.12,
+                child: (selectedMonth.year == now.year && selectedMonth.month == now.month)
+                    ? SizedBox.shrink()
+                    : GestureDetector(
+                    onTap: () => controller.nextMonth(),
+                    child: Icon(
+                        Icons.chevron_right_rounded,
+                        color: Theme.of(context).primaryColorDark
+                    )
+                ),
+              )
+            ],
+          );
+        }
     );
   }
 }

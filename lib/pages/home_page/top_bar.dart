@@ -20,16 +20,17 @@ class TopBar extends StatelessWidget {
             padding: const EdgeInsets.all(10),
           ),
           StreamBuilder<DateTime>(
-            stream: controller.selectedMonth.stream,
-            initialData: controller.selectedMonth.value,
-            builder: (context, snapshot) {
-              final selectedDate = snapshot.data!;
+              stream: controller.selectedMonth.stream,
+              initialData: controller.selectedMonth.value,
+              builder: (context, snapshot) {
+                final selectedDate = snapshot.data!;
 
-              return Text(
-                selectedDate.year.toString(),
-                style: Theme.of(context).textTheme.headline3
-              );
-            }
+                return Text(
+                    selectedDate.year.toString(),
+                    // ✅ DIPERBAIKI: headline3 -> headlineSmall
+                    style: Theme.of(context).textTheme.headlineSmall
+                );
+              }
           ),
           CircularButton(
             onPressed: () => SettingsDialog.show(context),
