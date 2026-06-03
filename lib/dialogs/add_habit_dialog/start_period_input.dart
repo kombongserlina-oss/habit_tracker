@@ -5,47 +5,47 @@ import 'package:provider/provider.dart';
 class StartPeriodInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Provider.of<AddHabitDialogController>(context);
-  
+
     return StreamBuilder<Object>(
-      stream: controller.selectedStartPeriod,
-      initialData: controller.startPeriod,
-      builder: (context, snapshot) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Column(
-              children: [
-                Box(
-                  selected: snapshot.data == StartPeriod.none,
-                  text: "None",
-                  onTap: () => controller.changeStartPeriod(StartPeriod.none)
-                ),
-                const Divider(color: Colors.transparent, height: 10),
-                Box(
-                  selected: snapshot.data == StartPeriod.today,
-                  text: "Today",
-                  onTap: () => controller.changeStartPeriod(StartPeriod.today)
-                ),
-              ],
-            ),
-            Column(
-              children: [
-                Box(
-                  selected: snapshot.data == StartPeriod.thisMonth,
-                  text: "This Month",
-                  onTap: () => controller.changeStartPeriod(StartPeriod.thisMonth),
-                ),
-                const Divider(color: Colors.transparent, height: 10),
-                Box(
-                  selected: snapshot.data == StartPeriod.thisYear,
-                  text: "This Year",
-                  onTap: () => controller.changeStartPeriod(StartPeriod.thisYear),
-                ),
-              ],
-            ),
-          ],
-        );
-      }
+        stream: controller.selectedStartPeriod,
+        initialData: controller.startPeriod,
+        builder: (context, snapshot) {
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Box(
+                      selected: snapshot.data == StartPeriod.none,
+                      text: "None",
+                      onTap: () => controller.changeStartPeriod(StartPeriod.none)
+                  ),
+                  const Divider(color: Colors.transparent, height: 10),
+                  Box(
+                      selected: snapshot.data == StartPeriod.today,
+                      text: "Today",
+                      onTap: () => controller.changeStartPeriod(StartPeriod.today)
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Box(
+                    selected: snapshot.data == StartPeriod.thisMonth,
+                    text: "This Month",
+                    onTap: () => controller.changeStartPeriod(StartPeriod.thisMonth),
+                  ),
+                  const Divider(color: Colors.transparent, height: 10),
+                  Box(
+                    selected: snapshot.data == StartPeriod.thisYear,
+                    text: "This Year",
+                    onTap: () => controller.changeStartPeriod(StartPeriod.thisYear),
+                  ),
+                ],
+              ),
+            ],
+          );
+        }
     );
   }
 }
@@ -70,37 +70,39 @@ class Box extends StatelessWidget {
         height: 35,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).shadowColor
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).shadowColor
         ),
         child: Stack(
-          alignment: Alignment.center,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              switchInCurve: Curves.elasticOut,
-              switchOutCurve: Curves.easeInQuart,
-              transitionBuilder: (child, anim) {
-                return ScaleTransition(
-                  scale: anim,
-                  child: child,
-                );
-              },
-              child: (selected) ? Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).accentColor,
-                  borderRadius: BorderRadius.circular(9)
-                ),
-              )
-              : SizedBox.shrink()
-            ),
-            Text(
-              text,
-              style: Theme.of(context).textTheme.subtitle2!.copyWith(
-                color: selected ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark 
+            alignment: Alignment.center,
+            children: [
+              AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.elasticOut,
+                  switchOutCurve: Curves.easeInQuart,
+                  transitionBuilder: (child, anim) {
+                    return ScaleTransition(
+                      scale: anim,
+                      child: child,
+                    );
+                  },
+                  child: (selected) ? Container(
+                    decoration: BoxDecoration(
+                      // ✅ DIPERBAIKI: accentColor -> colorScheme.secondary
+                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(9)
+                    ),
+                  )
+                      : SizedBox.shrink()
               ),
-            ),
-          ]
+              Text(
+                text,
+                // ✅ DIPERBAIKI: subtitle2 -> titleSmall
+                style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                    color: selected ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark
+                ),
+              ),
+            ]
         ),
       ),
     );

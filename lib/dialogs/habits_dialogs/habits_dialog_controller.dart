@@ -37,10 +37,11 @@ class HabitsDialogController {
   }
 
   void showDeleteHabitConfirmation(BuildContext context, int id, SlidableController slidableController) {
-    ConfirmationDialog.show(context, 
-      text: "Are you sure you want to delete this habit?",
-      onYes: () => deleteHabit(id),
-      onNo: () => slidableController.activeState?.close()
+    ConfirmationDialog.show(context,
+        text: "Are you sure you want to delete this habit?",
+        onYes: () => deleteHabit(id),
+        // ✅ DIPERBAIKI: hapus .activeState? karena API slidable versi baru sudah berubah
+        onNo: () => slidableController.close()
     );
   }
 

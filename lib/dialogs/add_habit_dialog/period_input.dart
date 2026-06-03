@@ -2,46 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:project_habits/dialogs/add_habit_dialog/add_habit_dialog_controller.dart';
 import 'package:provider/provider.dart';
 
-class PeriodInput extends StatelessWidget {  
+class PeriodInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Provider.of<AddHabitDialogController>(context);
-  
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         MiniDayButton(
-          text: "M", 
+          text: "M",
           initialChecked: controller.period[0],
           onValueChange: (newValue) => controller.changePeriodValue(0, newValue),
         ),
         MiniDayButton(
-          text: "T", 
+          text: "T",
           initialChecked: controller.period[1],
           onValueChange: (newValue) => controller.changePeriodValue(1, newValue),
         ),
         MiniDayButton(
-          text: "W", 
+          text: "W",
           initialChecked: controller.period[2],
           onValueChange: (newValue) => controller.changePeriodValue(2, newValue),
         ),
         MiniDayButton(
-          text: "T", 
+          text: "T",
           initialChecked: controller.period[3],
           onValueChange: (newValue) => controller.changePeriodValue(3, newValue),
         ),
         MiniDayButton(
-          text: "F", 
+          text: "F",
           initialChecked: controller.period[4],
           onValueChange: (newValue) => controller.changePeriodValue(4, newValue),
         ),
         MiniDayButton(
-          text: "S", 
+          text: "S",
           initialChecked: controller.period[5],
           onValueChange: (newValue) => controller.changePeriodValue(5, newValue),
         ),
         MiniDayButton(
-          text: "S", 
+          text: "S",
           initialChecked: controller.period[6],
           onValueChange: (newValue) => controller.changePeriodValue(6, newValue),
         )
@@ -79,7 +79,7 @@ class _MiniDayButtonState extends State<MiniDayButton> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          checked = !checked;          
+          checked = !checked;
         });
         widget.onValueChange(checked);
       },
@@ -92,41 +92,43 @@ class _MiniDayButtonState extends State<MiniDayButton> {
         ),
         alignment: Alignment.center,
         child: Stack(
-          alignment: Alignment.center,
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              switchInCurve: Curves.elasticOut,
-              switchOutCurve: Curves.easeInOutExpo,
-              transitionBuilder: (child, anim) {
-                return ScaleTransition(
-                  scale: anim,
-                  child: child,
-                );
-              },
-              child: (checked) 
-                ? Container (
-                  key: ValueKey<bool>(true),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).accentColor,
+            alignment: Alignment.center,
+            children: [
+              AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  switchInCurve: Curves.elasticOut,
+                  switchOutCurve: Curves.easeInOutExpo,
+                  transitionBuilder: (child, anim) {
+                    return ScaleTransition(
+                      scale: anim,
+                      child: child,
+                    );
+                  },
+                  child: (checked)
+                      ? Container (
+                      key: ValueKey<bool>(true),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        // ✅ DIPERBAIKI: accentColor -> colorScheme.secondary
+                        color: Theme.of(context).colorScheme.secondary,
+                      )
                   )
-                )
-                : SizedBox.shrink()
-            ),
-            AnimatedDefaultTextStyle(
-              duration: const Duration(milliseconds: 200),
-              curve: Curves.easeInOut,
-              style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                color: (checked) ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark,
-                fontSize: 18
+                      : SizedBox.shrink()
               ),
-              child: Text(
-                widget.text,
-                textAlign: TextAlign.center
+              AnimatedDefaultTextStyle(
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeInOut,
+                // ✅ DIPERBAIKI: bodyText2 -> bodyMedium
+                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                    color: (checked) ? Theme.of(context).primaryColorLight : Theme.of(context).primaryColorDark,
+                    fontSize: 18
+                ),
+                child: Text(
+                    widget.text,
+                    textAlign: TextAlign.center
+                ),
               ),
-            ),
-          ]
+            ]
         ),
       ),
     );
