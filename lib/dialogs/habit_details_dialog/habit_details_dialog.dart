@@ -19,7 +19,6 @@ class HabitDetailsDialog extends StatelessWidget {
             builder: (ctx, controller, child) {
               return Dialog(
                 insetPadding: const EdgeInsets.all(0),
-                // PERBAIKAN: .backgroundColor -> .colorScheme.surface
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 child: Container(
                   width: MediaQuery.of(context).size.width * 0.9,
@@ -33,12 +32,8 @@ class HabitDetailsDialog extends StatelessWidget {
                         children: [
                           CircularButton(
                             onPressed: () => Navigator.of(context).pop(),
-                            icon: Icon(
-                              Icons.close_rounded,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                            noBackground: true,
-                          ),
+                            icon: Icons.close_rounded, // Langsung panggil IconData-nya di sini
+                          )
                         ],
                       ),
                       Row(
@@ -62,12 +57,10 @@ class HabitDetailsDialog extends StatelessWidget {
                       RichText(
                           text: TextSpan(
                               text: "Start period: ",
-                              // PERBAIKAN: bodyText2 -> bodyMedium
                               style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
                               children: [
                                 TextSpan(
                                     text: controller.getStartPeriodString(),
-                                    // PERBAIKAN: subtitle2 -> titleSmall
                                     style: Theme.of(context).textTheme.titleSmall
                                 )
                               ]
@@ -136,18 +129,14 @@ class _EditableTextState extends State<EditableText> {
   Widget build(BuildContext context) {
     if(editing) {
       return Expanded(
+        // PERBAIKAN: Menyesuaikan parameter TextInput agar cocok dengan file text_input.dart milikmu
         child: TextInput(
           label: "Name",
-          autoFocus: true,
-          onChanged: (newValue) => text = newValue,
-          onSubmitted: (newValue) {
-            setState(() {
-              text = newValue;
-              editing = false;
-            });
+          hint: "Edit habit name...",
+          onChanged: (newValue) {
+            text = newValue;
             widget.onChange(text);
           },
-          controller: controller,
         ),
       );
     } else {

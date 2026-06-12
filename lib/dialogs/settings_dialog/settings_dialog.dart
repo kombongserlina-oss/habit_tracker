@@ -12,7 +12,6 @@ class SettingsDialog extends StatelessWidget {
       dispose: (ctx, SettingsDialogController controller) => controller.dispose(),
       child: Consumer<SettingsDialogController>(
         builder: (ctx, controller, child) => Dialog(
-          // PERBAIKAN 2: .backgroundColor -> .colorScheme.surface
           backgroundColor: Theme.of(context).colorScheme.surface,
           insetPadding: const EdgeInsets.symmetric(horizontal: 30),
           child: Padding(
@@ -24,7 +23,6 @@ class SettingsDialog extends StatelessWidget {
                   Center(
                     child: Text(
                         "Settings",
-                        // PERBAIKAN 3: headline2 -> headlineMedium
                         style: Theme.of(context).textTheme.headlineMedium
                     ),
                   ),
@@ -33,11 +31,11 @@ class SettingsDialog extends StatelessWidget {
                     "Light mode",
                   ),
                   Divider(color: Colors.transparent, height: 5),
+                  // 🛠️ PERBAIKAN: Menyelaraskan nama parameter TripleSelector
                   TripleSelector(
-                    options: ["Light", "Dark", "Auto"],
-                    onChanged: (newValue) => controller.changeThemeStatus(newValue),
-                    initialValue: controller.themeStatus.index,
-                    align: MainAxisAlignment.start,
+                    options: const ["Light", "Dark", "Auto"],
+                    selectedIndex: controller.themeStatus.index, // Menggunakan nama parameter yang benar
+                    onSelect: (newValue) => controller.changeThemeStatus(newValue), // Menggunakan nama parameter yang benar
                   ),
                   Divider(color: Colors.transparent),
                   Text("Colors"),
@@ -82,12 +80,10 @@ class SettingsDialog extends StatelessWidget {
                           textAlign: TextAlign.center,
                           text: TextSpan(
                               text: "This is an open source project\ncheck it on ",
-                              // PERBAIKAN 3: subtitle1 -> titleMedium
                               style: Theme.of(context).textTheme.titleMedium,
                               children: [
                                 TextSpan(
                                     text: "GitHub",
-                                    // PERBAIKAN 3 & 1: subtitle1 -> titleMedium & .accentColor -> .colorScheme.secondary
                                     style: Theme.of(context).textTheme.titleMedium!.copyWith(
                                         decoration: TextDecoration.underline,
                                         color: Theme.of(context).colorScheme.secondary
@@ -150,7 +146,6 @@ class ColorsBox extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          // PERBAIKAN 1: .accentColor -> .colorScheme.secondary
             border: (selected) ? Border.all(color: Theme.of(context).colorScheme.secondary, width: 3) : null,
             borderRadius: BorderRadius.circular(10)
         ),

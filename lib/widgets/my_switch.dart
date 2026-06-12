@@ -7,7 +7,7 @@ class MySwitch extends StatefulWidget {
   final bool? initialValue;
   final Function(bool newValue) onChanged;
 
-  MySwitch({ 
+  MySwitch({
     required this.onChanged,
     this.initialValue
   });
@@ -29,21 +29,23 @@ class _MySwitchState extends State<MySwitch> {
   Widget build(BuildContext context) {
     if(Platform.isIOS) {
       return CupertinoSwitch(
-        value: selected, 
+        value: selected,
         onChanged: (newValue) => setState(() {
           selected = newValue;
           widget.onChanged(newValue);
         }),
-        activeColor: Theme.of(context).accentColor,
+        // 🛠️ PERBAIKAN: .accentColor -> .colorScheme.secondary
+        activeColor: Theme.of(context).colorScheme.secondary,
       );
     } else {
       return Switch(
-        value: selected, 
+        value: selected,
         onChanged: (newValue) => setState(() {
           selected = newValue;
           widget.onChanged(newValue);
         }),
-        activeColor: Theme.of(context).accentColor,
+        // 🛠️ PERBAIKAN: .accentColor -> .colorScheme.secondary
+        activeColor: Theme.of(context).colorScheme.secondary,
       );
     }
   }

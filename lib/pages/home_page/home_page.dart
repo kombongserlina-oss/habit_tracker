@@ -8,9 +8,6 @@ import 'package:project_habits/pages/home_page/top_bar.dart';
 import 'package:project_habits/widgets/circular_button.dart';
 import 'package:provider/provider.dart';
 
-import 'day_box.dart';
-import 'habits_day_list.dart';
-
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,66 +15,68 @@ class HomePage extends StatelessWidget {
       create: (ctx) => HomePageController(),
       dispose: (ctx, HomePageController controller) => controller.dispose(),
       builder: (ctx, child) => Consumer<HomePageController>(
-        builder: (ctx, controller, child) {
-          return Scaffold(
-            body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TopBar(),
-                  MonthRow(),
-                  SizedBox(
-                    child: Calendar()
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top: 35, right: 35, left: 35, bottom: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Theme.of(context).primaryColorLight
+          builder: (ctx, controller, child) {
+            return Scaffold(
+                body: SafeArea(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TopBar(),
+                        MonthRow(),
+                        SizedBox(
+                            child: Calendar()
+                        ),
+                        Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: Stack(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 35, right: 35, left: 35, bottom: 10),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(10),
+                                          // 🛠️ DISETARAKAN: primaryColorLight -> surfaceContainerHighest atau primaryContainer
+                                          color: Theme.of(context).colorScheme.primaryContainer.withOpacity(0.3)
+                                      ),
+                                      padding: const EdgeInsets.only(top: 35),
+                                      child: HabitsDayList(),
+                                    ),
+                                  ),
+                                  Positioned(
+                                      left: 0,
+                                      top: 0,
+                                      width: 70,
+                                      height: 70,
+                                      child: DayBox()
+                                  ),
+                                  Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      width: 70,
+                                      height: 70,
+                                      child: Container(
+                                          padding: const EdgeInsets.all(15),
+                                          decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              // 🛠️ DISETARAKAN: primaryColor -> colorScheme.primary
+                                              color: Theme.of(context).colorScheme.primary
+                                          ),
+                                          child: CircularButton(
+                                            onPressed: () => controller.showHabitsDialog(context),
+                                            icon: Icons.list,
+                                          )
+                                      )
+                                  )
+                                ],
                               ),
-                              padding: const EdgeInsets.only(top: 35),
-                              child: HabitsDayList(),
-                            ),
-                          ),
-                          Positioned(
-                            left: 0,
-                            top: 0,
-                            width: 70,
-                            height: 70,
-                            child: DayBox()
-                          ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            width: 70,
-                            height: 70,
-                            child: Container(
-                              padding: const EdgeInsets.all(15),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Theme.of(context).primaryColor
-                              ),
-                              child: CircularButton(
-                                onPressed: () => controller.showHabitsDialog(context),
-                                icon: Icon(Icons.list),
-                              )
                             )
-                          )
-                        ],
-                      ),
+                        )
+                      ],
                     )
-                  )
-                ],
-              )
-            )
-          );
-        }
+                )
+            );
+          }
       ),
     );
   }

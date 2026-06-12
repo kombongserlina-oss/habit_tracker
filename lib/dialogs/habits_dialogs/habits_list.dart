@@ -26,20 +26,21 @@ class HabitsList extends StatelessWidget {
           padding: const EdgeInsets.all(0),
           itemCount: habitsKeys.length,
           itemBuilder: (ctx, i) {
-            final habit = habitsMap[habitsKeys[i]]!;
+            // 📝 DEFINISI UTAMA: variabel habitKey dibuat di sini berdasarkan indeks list
+            final habitKey = habitsKeys[i];
+            final habit = habitsMap[habitKey]!;
 
             return Slidable(
-              key: ValueKey(habit.id),
-              // PERBAIKAN: Slidable 3.x menggunakan endActionPane untuk aksi di sisi kanan
+              key: ValueKey(habitKey),
               endActionPane: ActionPane(
                 motion: const BehindMotion(),
                 extentRatio: 0.25,
                 children: [
                   SlidableAction(
                     onPressed: (slidableContext) {
-                      // PERBAIKAN: Menggunakan 'context' dari method build utama
-                      // agar pencarian instansi controller via Provider tetap valid dan aman
-                      controller.showDeleteHabitConfirmation(context, habit.id);
+                      // 🛠️ SEKARANG AMAN: habitKey terdefinisi dan slidableController diambil dengan benar
+                      final slidableController = Slidable.of(slidableContext)!;
+                      controller.showDeleteHabitConfirmation(context, habitKey, slidableController);
                     },
                     backgroundColor: Theme.of(context).highlightColor,
                     foregroundColor: Colors.white,
@@ -48,8 +49,8 @@ class HabitsList extends StatelessWidget {
                   ),
                 ],
               ),
-              child: InkWell( // Menggunakan InkWell agar ada efek riak saat ditekan
-                onTap: () => controller.showHabitDetailsDialog(context, habit.id),
+              child: InkWell(
+                onTap: () => controller.showHabitDetailsDialog(context, habitKey),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
                   child: Row(
@@ -58,7 +59,6 @@ class HabitsList extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 10),
                         child: Text(
                           habit.emoji,
-                          // PERBAIKAN: Berdasarkan aturan 3, jika sebelumnya tertulis headline1 -> diganti ke headlineLarge
                           style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                             color: Theme.of(context).primaryColorDark,
                           ),
@@ -70,7 +70,6 @@ class HabitsList extends StatelessWidget {
                           children: [
                             Text(
                               habit.text,
-                              // PERBAIKAN: bodyText2 -> bodyMedium
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             const SizedBox(height: 4),
@@ -79,14 +78,12 @@ class HabitsList extends StatelessWidget {
                               children: [
                                 Text(
                                   controller.getDaysString(habit),
-                                  // PERBAIKAN: subtitle1 -> titleMedium
                                   style: Theme.of(context).textTheme.titleMedium,
                                 ),
                                 Text(
                                   habit.startPeriod != null
                                       ? "Start: ${controller.getStartPeriodString(habit.startPeriod!)}"
                                       : "",
-                                  // PERBAIKAN: subtitle1 -> titleMedium
                                   style: Theme.of(context).textTheme.titleMedium,
                                 )
                               ],

@@ -14,10 +14,13 @@ class TopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          CircularButton(
-            onPressed: () => controller.showFullYearDialog(context),
-            icon: Icon(Icons.calendar_today),
+          // 🛠️ PERBAIKAN: Membungkus dengan Padding karena CircularButton tidak punya properti padding
+          Padding(
             padding: const EdgeInsets.all(10),
+            child: CircularButton(
+              onPressed: () => controller.showFullYearDialog(context),
+              icon: Icons.calendar_today, // Langsung IconData
+            ),
           ),
           StreamBuilder<DateTime>(
               stream: controller.selectedMonth.stream,
@@ -27,15 +30,17 @@ class TopBar extends StatelessWidget {
 
                 return Text(
                     selectedDate.year.toString(),
-                    // ✅ DIPERBAIKI: headline3 -> headlineSmall
                     style: Theme.of(context).textTheme.headlineSmall
                 );
               }
           ),
-          CircularButton(
-            onPressed: () => SettingsDialog.show(context),
-            icon: Icon(Icons.settings),
+          // 🛠️ PERBAIKAN: Membungkus dengan Padding karena CircularButton tidak punya properti padding
+          Padding(
             padding: const EdgeInsets.all(10),
+            child: CircularButton(
+              onPressed: () => SettingsDialog.show(context),
+              icon: Icons.settings, // Langsung IconData
+            ),
           ),
         ],
       ),

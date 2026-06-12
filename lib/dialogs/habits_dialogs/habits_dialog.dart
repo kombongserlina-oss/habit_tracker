@@ -21,7 +21,6 @@ class HabitsDialog extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height * 0.8,
                 decoration: BoxDecoration(
-                  // ✅ DIPERBAIKI: double dot (..) -> single dot (.)
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
@@ -38,7 +37,8 @@ class HabitsDialog extends StatelessWidget {
                             children: [
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.15,
-                                child: MyTextButton(
+                                // 🛠️ PERBAIKAN: Ganti MyTextButton ke CustomTextButton (atau sesuai nama class di text_button.dart)
+                                child: CustomTextButton(
                                   onPressed: () => Navigator.of(context).pop(),
                                   text: "Close",
                                 ),
@@ -47,16 +47,17 @@ class HabitsDialog extends StatelessWidget {
                                 child: Text(
                                     "Habits",
                                     textAlign: TextAlign.center,
-                                    // ✅ DIPERBAIKI: headline2 -> headlineMedium
                                     style: Theme.of(context).textTheme.headlineMedium
                                 ),
                               ),
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.15,
-                                child: MyTextButton(
-                                  onPressed: () => AddHabitDialog.show(context),
-                                  text: "Add",
-                                  align: TextAlign.right,
+                                child: Align(
+                                  alignment: Alignment.centerRight, // Ini menggantikan fungsi align tadi
+                                  child: CustomTextButton(
+                                    onPressed: () => AddHabitDialog.show(context),
+                                    text: "Add",
+                                  ),
                                 ),
                               ),
                             ]
